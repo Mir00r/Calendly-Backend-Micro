@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  auth-service:
+    build:
+      context: ./services/auth-service
+    ports:
+      - "8081:8081"
+    environment:
+      - DATABASE_URL=postgres://user:password@db:5432/auth
+    depends_on:
+      - db
+
+  event-service:
+    build:
+      context: ./services/event-service
+    ports:
+      - "8082:8082"
+    environment:
+      - DATABASE_URL=postgres://user:password@db:5432/events
+    depends_on:
+      - db
+
+  notification-service:
+    build:
+      context: ./services/notification-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SMTP_HOST=smtp.example.com
+      - SMTP_PORT=587
+      - SMTP_USER=username
+      - SMTP_PASSWORD=password
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
