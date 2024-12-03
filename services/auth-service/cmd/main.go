@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/Calendly-Backend-Micro/auth-service/config"
+	"github.com/Calendly-Backend-Micro/auth-service/db"
 	"log"
 	"os"
 
@@ -16,6 +17,12 @@ func main() {
 		configPath = envPath
 	}
 	config.LoadConfig(configPath)
+
+	// Connect to the database
+	db.Connect()
+
+	// Connect to Redis
+	db.ConnectRedis()
 
 	// Create a new Gin router
 	router := gin.Default()
